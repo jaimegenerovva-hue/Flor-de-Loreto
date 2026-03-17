@@ -92,6 +92,14 @@ export default function App() {
   const [formError, setFormError] = useState("");
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navItems = [
+    { label: "PROPIEDADES", href: "https://www.comprarcasasevilla.com/venta/" },
+    { label: "CALCULADORA HIPOTECA", href: "https://suhogar.comprarcasa.com/landing/calculadora-hipoteca" },
+    { label: "VALORA TU VIVIENDA", href: "https://suhogar.comprarcasa.com/landing/valorador" },
+    { label: "CONTACTO", href: "https://suhogar.comprarcasa.com/contacto" },
+  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -180,12 +188,7 @@ export default function App() {
             />
           </a>
           <nav className="hidden md:flex items-center gap-10">
-            {[
-              { label: "PROPIEDADES", href: "https://www.comprarcasasevilla.com/venta/" },
-              { label: "CALCULADORA HIPOTECA", href: "https://suhogar.comprarcasa.com/landing/calculadora-hipoteca" },
-              { label: "VALORA TU VIVIENDA", href: "https://suhogar.comprarcasa.com/landing/valorador" },
-              { label: "CONTACTO", href: "https://suhogar.comprarcasa.com/contacto" },
-            ].map((item) => (
+            {navItems.map((item) => (
               <a 
                 key={item.label} 
                 href={item.href} 
@@ -201,9 +204,63 @@ export default function App() {
               Solicitar Información
             </a>
           </nav>
-          <button className="md:hidden text-slate-900">
-            <Menu className="w-8 h-8" />
+          <button 
+            className="md:hidden text-slate-900 z-50 relative p-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle Menu"
+          >
+            {isMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
           </button>
+
+          {/* Mobile Menu */}
+          <AnimatePresence>
+            {isMenuOpen && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+                />
+                <motion.div
+                  initial={{ x: "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "100%" }}
+                  transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                  className="fixed top-0 right-0 h-screen w-[280px] bg-white z-40 shadow-2xl md:hidden flex flex-col pt-32 px-8"
+                >
+                  <div className="flex flex-col gap-8">
+                    {navItems.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-lg font-bold tracking-wider text-slate-900 hover:text-[#E4232A] transition-colors"
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                    <a 
+                      href={`mailto:Magdalena@suhogarsevilla.com?subject=${encodeURIComponent("Solicitud de información")}&body=${encodeURIComponent("Hola Magdalena, me interesa esta propiedad. Enlace: " + (typeof window !== 'undefined' ? window.location.href : ""))}`}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="bg-[#E4232A] text-white px-6 py-4 rounded-xl text-center font-bold transition-all shadow-lg shadow-[#E4232A]/20 mt-4"
+                    >
+                      Solicitar Información
+                    </a>
+                  </div>
+                  
+                  <div className="mt-auto pb-12 flex flex-col gap-4 border-t border-slate-100 pt-8">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Contacto Directo</p>
+                    <a href="tel:+34635475213" className="flex items-center gap-3 text-slate-700 font-bold">
+                      <Phone className="w-5 h-5 text-[#E4232A]" />
+                      +34 635 47 52 13
+                    </a>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
         </div>
       </header>
 
@@ -442,7 +499,7 @@ export default function App() {
       {/* Contact Section */}
       <section id="contacto" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-[#E4232A] rounded-[2.5rem] p-8 md:p-12 lg:p-16 flex flex-col lg:flex-row gap-12 relative overflow-hidden shadow-2xl shadow-[#E4232A]/30">
+          <div className="bg-[#E4232A] rounded-[2.5rem] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col lg:flex-row gap-12 relative overflow-hidden shadow-2xl shadow-[#E4232A]/30">
             <div className="absolute top-0 right-0 w-1/2 h-full bg-white/5 skew-x-12 translate-x-20"></div>
             
             <div className="lg:w-1/2 relative z-10 flex flex-col justify-between">
@@ -451,7 +508,7 @@ export default function App() {
                 <p className="text-white/80 text-lg mb-8 max-w-md">Nuestro equipo de consultores expertos está a su disposición para organizar una visita privada o enviarle el dossier completo de la propiedad.</p>
                 
                 <div className="flex items-center gap-6 mb-10">
-                  <div className="w-24 h-24 rounded-full border-4 border-white/20 overflow-hidden shadow-lg flex-shrink-0">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white/20 overflow-hidden shadow-lg flex-shrink-0">
                     <img 
                       src="https://i.ibb.co/3yvvt76w/imagen.jpg" 
                       alt="Agente Magdalena" 
@@ -466,22 +523,22 @@ export default function App() {
                 </div>
 
                 <div className="space-y-6">
-                  <a href="tel:+34635475213" className="flex items-center gap-4 text-white hover:text-white/80 transition-colors group">
-                    <div className="p-3 bg-white/10 rounded-full group-hover:bg-white/20 transition-colors">
-                      <Phone className="w-6 h-6" />
+                  <a href="tel:+34635475213" className="flex items-center gap-3 sm:gap-4 text-white hover:text-white/80 transition-colors group">
+                    <div className="p-2.5 sm:p-3 bg-white/10 rounded-full group-hover:bg-white/20 transition-colors flex-shrink-0">
+                      <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     <div>
-                      <p className="text-xs text-white/60 uppercase font-bold">Llámenos</p>
-                      <p className="text-xl font-bold">+34 635 47 52 13</p>
+                      <p className="text-[10px] sm:text-xs text-white/60 uppercase font-bold">Llámenos</p>
+                      <p className="text-base sm:text-xl font-bold">+34 635 47 52 13</p>
                     </div>
                   </a>
-                  <a href="mailto:Magdalena@suhogarsevilla.com" className="flex items-center gap-4 text-white hover:text-white/80 transition-colors group">
-                    <div className="p-3 bg-white/10 rounded-full group-hover:bg-white/20 transition-colors">
-                      <Mail className="w-6 h-6" />
+                  <a href="mailto:Magdalena@suhogarsevilla.com" className="flex items-center gap-3 sm:gap-4 text-white hover:text-white/80 transition-colors group">
+                    <div className="p-2.5 sm:p-3 bg-white/10 rounded-full group-hover:bg-white/20 transition-colors flex-shrink-0">
+                      <Mail className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <div>
-                      <p className="text-xs text-white/60 uppercase font-bold">Email</p>
-                      <p className="text-xl font-bold">Magdalena@suhogarsevilla.com</p>
+                    <div className="min-w-0">
+                      <p className="text-[10px] sm:text-xs text-white/60 uppercase font-bold">Email</p>
+                      <p className="text-[13px] sm:text-xl font-bold whitespace-nowrap">Magdalena@suhogarsevilla.com</p>
                     </div>
                   </a>
                 </div>
