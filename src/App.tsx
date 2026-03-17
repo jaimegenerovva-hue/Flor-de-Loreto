@@ -283,7 +283,7 @@ export default function App() {
             transition={{ duration: 0.8 }}
             className="max-w-2xl mb-8 md:mb-0 text-center md:text-left"
           >
-            <span className="inline-block px-8 py-2 bg-[#E4232A] text-white text-[13px] font-bold rounded-full mb-4 uppercase tracking-widest whitespace-nowrap shadow-lg shadow-[#E4232A]/20">
+            <span className="mt-12 md:mt-0 inline-block px-8 py-2 bg-[#E4232A] text-white text-[13px] font-bold rounded-full mb-4 uppercase tracking-widest whitespace-nowrap shadow-lg shadow-[#E4232A]/20">
               Oportunidad Única
             </span>
             <h1 className="text-5xl md:text-8xl font-serif font-black text-white leading-none mb-6">
